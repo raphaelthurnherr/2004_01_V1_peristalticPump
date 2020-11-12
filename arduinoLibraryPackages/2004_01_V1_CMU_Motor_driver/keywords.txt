@@ -1,0 +1,29 @@
+#######################################
+# Syntax Coloring Map Servo
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+board_2004_01_V01	KEYWORD1	board_2004_01_V01	
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin						KEYWORD2
+
+getStepperState				KEYWORD2
+stepperRotation				KEYWORD2
+setStepperDriveMode			KEYWORD2
+
+setDigitalOutput			KEYWORD2
+setStepperDriveMode			KEYWORD2
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+device_pca9629 			LITERAL1
