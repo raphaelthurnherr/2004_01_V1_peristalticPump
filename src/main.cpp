@@ -77,7 +77,7 @@ void setup() {
   u8x8.drawString(0, 0, "----------------");
   u8x8.drawString(0, 2, "PERISTALTIC PUMP");
   u8x8.drawString(0, 4, "----------------");
-  u8x8.drawString(0, 6, " RTH 17.06.2020 ");
+  u8x8.drawString(0, 6, " RTH 13.01.2021 ");
   
   delay(1000);
 
