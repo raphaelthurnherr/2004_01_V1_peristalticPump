@@ -1,11 +1,17 @@
+/**
+ * @file rotarySwitch.cpp
+ * @author your name (you@domain.com)
+ * @brief Rotary switch events detection library, must be used with a dual state rotary switch
+ * @version 1.0
+ * @date 2021-01-11
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
   #include <Arduino.h>
   #include "rotarySwitch.h"
   
-  /*
-  pinMode(rswitch_sw_pin, INPUT);
-  pinMode(rswitch_clk_pin, INPUT);
-  pinMode(rswitch_dat_pin, INPUT);
-*/
 
   /**
  * @brief Get the Rotary Switch Event object
@@ -29,18 +35,29 @@ signed char getRotarySwitchEvent(unsigned char rswitch_clk_pin, unsigned char rs
   encoder_pin |= digitalRead(rswitch_dat_pin)<<1;
   encoder_pin |= digitalRead(rswitch_sw_pin)<<2;
 
-  // Detect rising edge of CLK for get rotary direction
-  if(((old_encoder_pin & 0x01) == 0) && ((encoder_pin & 0x01) > 0)){
-    if((encoder_pin & 0x02) > 0){
-      // Get data level for CCW
-      rotation_direction = 2;
-    }else 
-    // Get data level for CW
-      rotation_direction = 1;
+  // Detect rising or falling edge of CLK for get rotary direction
+  if((old_encoder_pin & 0x01) != (encoder_pin & 0x01)){
+    if(old_encoder_pin & 0x01){
+      if((encoder_pin & 0x02) == 0){
+        // Get data level for CCW
+        rotation_direction = 2;
+      }else {
+      // Get data level for CW
+        rotation_direction = 1;
+      }
+    }else{
+      if((encoder_pin & 0x02) > 0){
+        // Get data level for CCW
+        rotation_direction = 2;
+      }else {
+      // Get data level for CW
+        rotation_direction = 1;
+      }
+    }
   }
 
-      // Encoder rotation pin CLK and DAT must be to high level before get SW state
-    if(((encoder_pin & 0x03) ==  0x03) && ((old_encoder_pin & 0x03) ==  0x03)) {
+    // Encoder rotation pin CLK and DAT must be to the same level before get SW state
+    if((encoder_pin & 0x03) == (old_encoder_pin & 0x03)) {
       // Detect falling edge of SW push
       if(((old_encoder_pin & 0x04) > 0) && ((encoder_pin & 0x04) == 0)){
         sw_event = 1;
@@ -53,13 +70,11 @@ signed char getRotarySwitchEvent(unsigned char rswitch_clk_pin, unsigned char rs
     }
 
 
-
  //******
  // MULTI EVENT ASSIGNEMENT
  //******
   rotary_sw_event |= rotation_direction;
   rotary_sw_event |= sw_event <<2;
-
 
   if(rotary_sw_event != old_rotary_sw_event){
     switch(rotary_sw_event & 0x03){
@@ -83,19 +98,22 @@ signed char getRotarySwitchEvent(unsigned char rswitch_clk_pin, unsigned char rs
     }
   } else encoderAction = ROTARY_NO_EVENT;
 
-      // Check timer for long push detection. Send event only one time
-      // DAT and CLK must must high level
-      if((encoder_pin == 0x03) && !longPressWaitForRelease){
-          // Long press detection (>1000ms)
-          if(*timerPress >= 1000){
-            encoderAction = ROTARY_SW_LONG_PUSH;
-            longPressWaitForRelease = 1;
-            *timerPress=0;
-          }
-      }
 
-    old_encoder_pin = encoder_pin;
-    old_rotary_sw_event = rotary_sw_event;
+  // Check timer for long push detection. Send event only one time
+  // DAT and CLK must be to the same level
+  if((encoder_pin == 0x03) || (encoder_pin == 0x00)){
+    if(!longPressWaitForRelease){
+      // Long press detection (>1000ms)
+      if(*timerPress >= 1000){
+        encoderAction = ROTARY_SW_LONG_PUSH;
+        longPressWaitForRelease = 1;
+        *timerPress=0;
+      }
+    }
+  }
+
+  old_encoder_pin = encoder_pin;
+  old_rotary_sw_event = rotary_sw_event;
       
   return encoderAction;
 }

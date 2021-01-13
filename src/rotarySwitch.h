@@ -1,10 +1,4 @@
-// Rotary switch pin definition in getRotarySwitchEvent()
-/*
-#define rswitch_clk_pin 2
-#define rswitch_dat_pin 0
-#define rswitch_sw_pin 16
-*/
-
+// Rotary switch pin definition in getRotarySwitchEvent()-
 
 #ifndef ROTARYSWITCH_H
 #define ROTARYSWITCH_H
