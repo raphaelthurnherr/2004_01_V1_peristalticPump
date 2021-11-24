@@ -77,7 +77,7 @@ void setup() {
   u8x8.drawString(0, 0, "----------------");
   u8x8.drawString(0, 2, "PERISTALTIC PUMP");
   u8x8.drawString(0, 4, "----------------");
-  u8x8.drawString(0, 6, " RTH 13.01.2021 ");
+  u8x8.drawString(0, 6, " RTH 23.11.2021 ");
   
   delay(1000);
 
@@ -159,13 +159,13 @@ void loop() {
         // Liquide flow error ! stop pumping
         // Stop pumping when auto mode is selected
         if(menu==20){
-          stopPumping();
+          stopPumping();          // Display ERROR MENU
+          menu = 3;
+          digitalWrite(LED_RED_PIN, 0);     // Turn on ERROR RED LED
+          digitalWrite(LED_GREEN_PIN, 1);     // Turn OFF green LED
+          Serial.print("ERROR ");
+
         }
-        // Display ERROR MENU
-        menu = 3;
-        digitalWrite(LED_RED_PIN, 0);     // Turn on ERROR RED LED
-        digitalWrite(LED_GREEN_PIN, 1);     // Turn OFF green LED
-        Serial.print("ERROR ");
         timer3Sec=0;
     }
 
